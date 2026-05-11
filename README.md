@@ -6,19 +6,19 @@ It focuses on analyzing Continuous Glucose Monitoring (CGM) data to detect patte
 
 # The project combines:
 
-📈 Descriptive Data Analysis
-⚠️ Risk Pattern Detection
-🧠 Personalized Patient Insights
-📊 Data Visualization using Python
+- Descriptive Data Analysis
+- Risk Pattern Detection
+- Personalized Patient Insights
+- Data Visualization using Python
 
 # Objective
 
 ## To analyze patient health data and identify:
 
-High glucose risk patterns
-Time-based (hourly) glucose fluctuations
-Patient-level risk exposure
-Relationships between lifestyle factors and glucose levels
+- High glucose risk patterns
+- Time-based (hourly) glucose fluctuations
+- Patient-level risk exposure
+- Relationships between lifestyle factors and glucose levels
 
  📁 Project Structure
 - HUPA dataset → raw data source
@@ -27,7 +27,7 @@ Relationships between lifestyle factors and glucose levels
 - notebooks → EDA + analysis work
 - app.py → Streamlit dashboard
 
- ## ⚙️ Tech Stack
+ ## Tech Stack
 - Python
 - Pandas
 - NumPy
@@ -35,10 +35,7 @@ Relationships between lifestyle factors and glucose levels
 - Seaborn
 - Streamlit
 - 
- ## 🚀 How to Run
-
-```bash
-pip install -r requirements.txt
+## How to Run
 
 ## Key Insights
 Certain hours show high glucose risk spikes
