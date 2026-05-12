@@ -2,6 +2,9 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import numpy as np
+import matplotlib.pyplot as plt
+from PIL import Image
+import os
 
 # Set page config
 st.set_page_config(page_title="Diabetes Analysis Dashboard", layout="wide")
@@ -151,7 +154,8 @@ st.markdown("""
 
 @st.cache_data
 def load_data():
-    df = pd.read_csv("clean.csv")
+    csv_path = os.path.join(os.path.dirname(__file__), "clean.csv")
+    df = pd.read_csv(csv_path)
     df['time'] = pd.to_datetime(df['time'])
     df['hour'] = df['time'].dt.hour
     return df
@@ -256,23 +260,59 @@ with tab1:
 
 with tab2:
     st.markdown("<h2>Prescriptive Analysis</h2>", unsafe_allow_html=True)
-    pcol1, pcol2 = st.columns(2)
-    with pcol1:
-        st.markdown("<h3>Sleep Impact on Hypo Frequency</h3>", unsafe_allow_html=True)
-        night_df = df[df['hour'].between(0, 6)].copy()
-        night_df['is_hypo'] = night_df['glucose'] < 70
-        sleep_hypo = night_df.groupby('Patient_ID').agg(avg_s=('Average Sleep Duration (hrs)', 'mean'), h_f=('is_hypo', 'mean')).reset_index()
-        fig5 = px.scatter(sleep_hypo, x='avg_s', y='h_f', trendline="ols", color_discrete_sequence=['#E67E22'])
-        st.plotly_chart(style_plot(fig5, m_size=20), use_container_width=True)
-        st.markdown("<p class='custom-caption'>Evaluating the relationship between rest duration and low glucose risks.</p>", unsafe_allow_html=True)
+    import os
+    plot_dir = "./analysis_plots/prescriptive_analysis/"
 
-    with pcol2:
-        st.markdown("<h3>Emergency Condition Mapping</h3>", unsafe_allow_html=True)
-        alerts = df[(df['heart_rate'] > 100) & ((df['glucose'] < 70) | (df['glucose'] > 180))]
-        fig6 = px.scatter(alerts.sample(min(len(alerts), 500)), x='heart_rate', y='glucose', 
-                          color='glucose', color_continuous_scale='Bluered')
-        st.plotly_chart(style_plot(fig6, m_size=20), use_container_width=True)
-        st.markdown("<p class='custom-caption'>Combined high heart rate and glucose instability markers.</p>", unsafe_allow_html=True)
+    # Question 1
+    st.markdown(f'<div style="font-weight: bold; font-size: 22px;">1. How can multi-source wearable and CGM data be used to build a patient-level prescriptive risk scoring system for Type 1 Diabetes that identifies high-risk individuals and recommends personalized intervention strategies?</div>', unsafe_allow_html=True)
+    q1_plots = ["Top 10 High-Risk Patients.png", "Patient Risk Category Distribution.png", "Risk Category by Age Group.png", "Average Risk Score by Age Group.png"]
+    q1_existing = [p for p in q1_plots if os.path.exists(os.path.join(plot_dir, p))]
+    if q1_existing:
+        cols = st.columns(len(q1_existing))
+        for idx, p in enumerate(q1_existing):
+            with cols[idx]:
+                st.image(os.path.join(plot_dir, p), use_container_width=True)
+    st.info("""The model identifies a clear subgroup of high-risk T1DM patients with elevated risk scores driven by glucose instability, frequent hyper/hypoglycemic events, and physiological stress indicators. A large portion of patients fall into the High Risk category, suggesting significant variability in disease control across individuals. Moderate and low-risk groups indicate relatively better glucose stability and healthier lifestyle patterns. Overall, diabetes risk in this cohort is strongly influenced by combined effects of glucose dynamics, heart rate stress, and behavioral factors like sleep and activity.\n\n\n### Prescriptive Insights \n#### 1. For High-Risk Patients:\n##### Observed:\nHigh glucose variability\nFrequent hyper/hypoglycemia\nElevated heart rate stress\nPoor sleep + low activity\n##### Recommended actions:\nAdjust insulin timing and dosing\nContinuous glucose monitoring alerts\nImprove sleep hygiene (fixed sleep schedule)\nIncrease moderate physical activity\nStress management interventions\n#### 2.For Moderate-Risk Patients:\n##### Observed:\nOccasional glucose spikes\nPartial lifestyle imbalance\n##### Recommended actions:\nMonitor post-meal glucose trends\nImprove activity consistency\nSleep tracking optimization\n#### 3.For Low-Risk Patients:\n##### Observed:\nStable glucose patterns\nBalanced lifestyle metrics\n##### Recommended actions:\nMaintain current routine\nPreventive monitoring only""")
+
+    # Question 7
+    st.markdown(f'<div style="font-weight: bold; font-size: 22px;">7. How can time-of-day glucose patterns and patient-level behavior be combined to develop a risk exposure model that classifies patients into actionable sensitivity levels for personalized Diabetes management?</div>', unsafe_allow_html=True)
+    if os.path.exists(os.path.join(plot_dir, "plot.png")):
+        cols = st.columns(2)
+        with cols[0]:
+            st.image(os.path.join(plot_dir, "plot.png"), use_container_width=True)
+        with cols[1]:
+            st.image(os.path.join(plot_dir, "plot.png"), use_container_width=True)
+    st.info("""The global pattern shows that 11 AM and 7\u201310 PM are the most consistent high\u2011risk glucose hours, meaning these windows are when glucose tends to run highest across the entire population.\nPatients with the highest personal risk exposure ratios (e.g., HUPA0010P, HUPA0022P, HUPA0027P) spend a large proportion of their readings inside these high\u2011risk hours, indicating that their daily routines place them directly in the time windows where glucose is most unstable.\nPatients with higher personal risk exposure are likely more sensitive to circadian glucose fluctuations, especially during evening hours. These individuals may require stricter monitoring and optimized insulin timing during identified high-risk periods.""")
+
+    # Question 12
+    st.markdown(f'<div style="font-weight: bold; font-size: 22px;">12. Does average sleep duration directly influence the frequency of dangerous nocturnal hypoglycemia? Is there a \'safe\' sleep duration threshold below which overnight hypoglycemia frequency significantly increases?</div>', unsafe_allow_html=True)
+    if os.path.exists(os.path.join(plot_dir, "Sleep Duration vs Nocturnal Hypo Frequency.png")):
+        st.image(os.path.join(plot_dir, "Sleep Duration vs Nocturnal Hypo Frequency.png"))
+    st.info("""The regression analysis identifies the correlation between sleep length and the prevalence of overnight lows. For short sleepers, prescribe higher bedtime glucose targets or a reduction in nocturnal basal rates.""")
+
+    # Question 18
+    st.markdown(f'<div style="font-weight: bold; font-size: 22px;">18. Should alerts be triggered when heart rate and glucose simultaneously become abnormal?</div>', unsafe_allow_html=True)
+    if os.path.exists(os.path.join(plot_dir, "Potential Alert Conditions.png")):
+        st.image(os.path.join(plot_dir, "Potential Alert Conditions.png"))
+    st.info("""Many patients show extremely high glucose levels (180\u2013400) combined with elevated heart rates.\nA second cluster appears at low glucose levels (40\u201370), which may indicate hypoglycemia risk.\nHigher heart rates are observed in both hyperglycemic and hypoglycemic conditions.\nSeveral outlier patients show very high heart rate with abnormal glucose values, indicating possible emergency conditions.""")
+
+    # Question 19
+    st.markdown(f'<div style="font-weight: bold; font-size: 22px;">19. Can personalized treatment recommendations be created using combined physiological markers?</div>', unsafe_allow_html=True)
+    if os.path.exists(os.path.join(plot_dir, "Multivariable Correlation Matrix.png")):
+        st.image(os.path.join(plot_dir, "Multivariable Correlation Matrix.png"))
+    st.info("""The multivariable correlation analysis revealed strong relationships between physical activity biomarkers such as steps and calories burned, while glucose showed weak direct correlation with individual biomarkers, including insulin delivery. These findings suggest that glucose regulation is highly multifactorial and influenced by complex interactions among activity, metabolism, insulin response, and patient-specific physiological factors. The results support the need for personalized, multi-factor diabetes monitoring and predictive healthcare systems.""")
+
+    # Question 24
+    st.markdown(f'<div style="font-weight: bold; font-size: 22px;">24. Should calorie expenditure be used to recommend insulin dosage changes?</div>', unsafe_allow_html=True)
+    if os.path.exists(os.path.join(plot_dir, "Calories vs Future Glucose.png")):
+        st.image(os.path.join(plot_dir, "Calories vs Future Glucose.png"))
+    st.info("""Our analysis found that calorie expenditure alone had almost no correlation with glucose levels or insulin delivery. This suggests that insulin recommendations should not rely solely on calories burned. Instead, diabetes management may require combining multiple physiological indicators such as glucose trends, insulin dosage, activity intensity, and heart rate for more personalized treatment decisions.""")
+
+    # Question 30
+    st.markdown(f'<div style="font-weight: bold; font-size: 22px;">30. What combined intervention (steps + carb reduction + insulin review) should be recommended for participants with multiple risk indicators?</div>', unsafe_allow_html=True)
+    if os.path.exists(os.path.join(plot_dir, "plot.png")):
+        st.image(os.path.join(plot_dir, "plot.png"))
+    st.info("""\u201cUrgent\u201d cases show the worst combination:\n      - very low steps\n      - very high carb intake\n      - high insulin dosing\n\u2022 \u201cModerate\u201d cases show early warning signs:\n      - slightly low activity OR\n      - moderately high carb intake\n\u2022 \u201cMaintain\u201d group represents stable lifestyle behavior.\n\u2022 Bubble size (insulin volume) highlights individuals with heavy insulin reliance.\n\u2022 This visualization quickly identifies who needs immediate lifestyle intervention.""")
 with tab3:
     st.header("Predictive Analysis")
 
@@ -344,10 +384,11 @@ with tab3:
 
     st.subheader("Actual vs Predicted Glucose")
 
-    linear_img = Image.open("charts/linear_regression.png")
-    xgb_img = Image.open("charts/xgboost.png")
-    lstm_img = Image.open("charts/lstm.png")
-    gru_img = Image.open("charts/gru.png")
+    charts_dir = os.path.join(os.path.dirname(__file__), "charts")
+    linear_img = Image.open(os.path.join(charts_dir, "linear_regression.png"))
+    xgb_img = Image.open(os.path.join(charts_dir, "xgboost.png"))
+    lstm_img = Image.open(os.path.join(charts_dir, "lstm.png"))
+    gru_img = Image.open(os.path.join(charts_dir, "gru.png"))
 
     col1, col2 = st.columns(2)
 
