@@ -16,7 +16,7 @@
    - Generates rule-based insights and prescriptive logic  
    - Uses clean.csv as input
 
-## 4. Team9_PyCoders_Category3.PrescriptiveAnalysis_(15-30).ipynb  
+## 4. Team9_PyCoders_Category3.PrescriptiveAnalysis_(16-30).ipynb  
    - Category 3 queries (Part 2)  
    - Covers prescriptive questions 16–30  
    - Continues rule-based insights and recommendations  
