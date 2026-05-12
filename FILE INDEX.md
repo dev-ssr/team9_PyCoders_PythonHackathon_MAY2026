@@ -32,7 +32,7 @@
    - Initial inspection before cleaning  
    - Used before creating merged_data.csv
 
-## 7. app.py  
+## 7. Team9_PyCoders_app.py  
    - Streamlit dashboard  
    - Visualizes insights using clean.csv  
    - Runs locally from command prompt
