@@ -2,6 +2,8 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 import numpy as np
+import matplotlib.pyplot as plt
+from PIL import Image
 
 # Set page config
 st.set_page_config(page_title="Diabetes Analysis Dashboard", layout="wide")
@@ -13,7 +15,7 @@ st.markdown("""
     
     /* MAIN TITLE - 70px Bold & Dark Navy */
     h1 { 
-        font-size: 100px !important; 
+        font-size: 70px !important; 
         color: #0B243B !important; 
         text-align: center; 
         font-weight: 800 !important; 
@@ -22,7 +24,7 @@ st.markdown("""
     
     /* TARGETING THE TAB TEXT */
     .stTabs [data-baseweb="tab"] p {
-        font-size: 70px !important; 
+        font-size: 30px !important; 
         font-weight: 700 !important;
         color: #0B243B !important;
         margin: 0 !important;
@@ -33,7 +35,9 @@ st.markdown("""
         height: auto !important;
         padding-top: 20px !important;
         padding-bottom: 30px !important; /* Extra space for the line */
-        margin-bottom: 10px !important;
+        margin: 10px !important;
+        
+        
     }
 
     /* FIXING THE HIGHLIGHT LINE (THE INDICATOR) */
@@ -203,23 +207,53 @@ def style_plot(fig, gap=0.2, m_size=None):
     return fig
 
 # --- TABS ---
-tab1, tab2, tab3 = st.tabs(["Descriptive Analysis", "Prescriptive Analysis", "Predictive Analysis"])
+tab1, tab2, tab3 = st.tabs([
+    "Descriptive Analysis",
+    "Prescriptive Analysis",
+    "Predictive Analysis"
+])
+
+# =====================================================
+# DESCRIPTIVE ANALYSIS TAB
+# =====================================================
 
 with tab1:
-    st.markdown("<h2>Descriptive Analysis</h2>", unsafe_allow_html=True)
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown("<h3>Average Glucose by Gender & Race</h3>", unsafe_allow_html=True)
-        pivot_df = df.groupby(['Race', 'Gender'])['glucose'].mean().reset_index()
-        fig1 = px.bar(pivot_df, x='Race', y='glucose', color='Gender', barmode='group', 
-                      color_discrete_sequence=['#2E86C1', '#7FB3D5'])
-        st.plotly_chart(style_plot(fig1), use_container_width=True)
-        st.markdown("<p class='custom-caption'>Comparison of average glucose levels across demographic groups.</p>", unsafe_allow_html=True)
 
-        
-    
+    st.header("Descriptive Analysis")
+
+    st.markdown("""
+    This section summarizes patterns in glucose, demographics, activity,
+    heart rate, insulin usage, and patient lifestyle indicators.
+    """)
+
+    # ROW 1
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.subheader("Average Glucose by Gender & Race")
+
+        pivot_df = df.groupby(['Race', 'Gender'])['glucose'].mean().reset_index()
+
+        fig1 = px.bar(
+            pivot_df,
+            x='Race',
+            y='glucose',
+            color='Gender',
+            barmode='group',
+            color_discrete_sequence=['#2E86C1', '#7FB3D5']
+        )
+
+        st.plotly_chart(style_plot(fig1), use_container_width=True)
+
+        st.markdown("""
+        <p class='custom-caption'>
+        This chart compares average glucose levels across gender and race groups.
+        It helps identify demographic groups that may show higher glucose variation.
+        </p>
+        """, unsafe_allow_html=True)
+
     with col2:
-        st.markdown("<h3>Distribution of Glucose Levels</h3>", unsafe_allow_html=True)
+        st.subheader("Distribution of Glucose Levels")
 
         fig2 = px.histogram(
             df,
@@ -229,51 +263,203 @@ with tab1:
         )
 
         fig2.update_layout(
-            title="Distribution of Glucose Levels",
             xaxis_title="Glucose",
             yaxis_title="Frequency"
         )
 
         st.plotly_chart(style_plot(fig2), use_container_width=True)
 
-        st.markdown("<p class='custom-caption'>Frequency analysis of glucose readings across the patient population.</p>", unsafe_allow_html=True)
+        st.markdown("""
+        <p class='custom-caption'>
+        This chart shows how glucose readings are distributed across the dataset.
+        It helps identify normal, high, and extreme glucose ranges.
+        </p>
+        """, unsafe_allow_html=True)
 
+    st.markdown("---")
+
+    # ROW 2
     col3, col4 = st.columns(2)
+
     with col3:
-        st.markdown("<h3>Activity vs Heart Rate</h3>", unsafe_allow_html=True)
-        fig3 = px.scatter(df.sample(min(len(df), 800)), x='steps', y='heart_rate', 
-                          opacity=0.7, color_discrete_sequence=['#1F618D'])
+        st.subheader("Activity vs Heart Rate")
+
+        sample_df = df.sample(min(len(df), 800), random_state=42)
+
+        fig3 = px.scatter(
+            sample_df,
+            x='steps',
+            y='heart_rate',
+            opacity=0.7,
+            color_discrete_sequence=['#1F618D']
+        )
+
         st.plotly_chart(style_plot(fig3, m_size=20), use_container_width=True)
-        st.markdown("<p class='custom-caption'>Correlation between movement intensity and cardiovascular response.</p>", unsafe_allow_html=True)
+
+        st.markdown("""
+        <p class='custom-caption'>
+        This chart shows the relationship between physical activity and heart rate.
+        It helps understand how patient movement affects cardiovascular response.
+        </p>
+        """, unsafe_allow_html=True)
 
     with col4:
-        st.markdown("<h3>Average Basal Rate by Age Group</h3>", unsafe_allow_html=True)
-        df['AgeGroup'] = pd.cut(df['Age'], bins=[0, 30, 45, 60, 100], labels=['<30', '30-45', '45-60', '60+'])
-        age_basal = df.groupby('AgeGroup', observed=False)['basal_rate'].mean().reset_index()
-        fig4 = px.bar(age_basal, x='AgeGroup', y='basal_rate', color_discrete_sequence=['#5D8AA8'])
+        st.subheader("Average Basal Rate by Age Group")
+
+        df['AgeGroup'] = pd.cut(
+            df['Age'],
+            bins=[0, 30, 45, 60, 100],
+            labels=['<30', '30-45', '45-60', '60+']
+        )
+
+        age_basal = df.groupby(
+            'AgeGroup',
+            observed=False
+        )['basal_rate'].mean().reset_index()
+
+        fig4 = px.bar(
+            age_basal,
+            x='AgeGroup',
+            y='basal_rate',
+            color_discrete_sequence=['#5D8AA8']
+        )
+
         st.plotly_chart(style_plot(fig4, gap=0.6), use_container_width=True)
-        st.markdown("<p class='custom-caption'>Trends in background insulin requirements across age brackets.</p>", unsafe_allow_html=True)
+
+        st.markdown("""
+        <p class='custom-caption'>
+        This chart compares average basal insulin rate across age groups.
+        It helps show whether insulin needs differ by patient age.
+        </p>
+        """, unsafe_allow_html=True)
+
+
+# =====================================================
+# PRESCRIPTIVE ANALYSIS TAB
+# =====================================================
 
 with tab2:
-    st.markdown("<h2>Prescriptive Analysis</h2>", unsafe_allow_html=True)
-    pcol1, pcol2 = st.columns(2)
-    with pcol1:
-        st.markdown("<h3>Sleep Impact on Hypo Frequency</h3>", unsafe_allow_html=True)
-        night_df = df[df['hour'].between(0, 6)].copy()
-        night_df['is_hypo'] = night_df['glucose'] < 70
-        sleep_hypo = night_df.groupby('Patient_ID').agg(avg_s=('Average Sleep Duration (hrs)', 'mean'), h_f=('is_hypo', 'mean')).reset_index()
-        fig5 = px.scatter(sleep_hypo, x='avg_s', y='h_f', trendline="ols", color_discrete_sequence=['#E67E22'])
-        st.plotly_chart(style_plot(fig5, m_size=20), use_container_width=True)
-        st.markdown("<p class='custom-caption'>Evaluating the relationship between rest duration and low glucose risks.</p>", unsafe_allow_html=True)
 
-    with pcol2:
-        st.markdown("<h3>Emergency Condition Mapping</h3>", unsafe_allow_html=True)
-        alerts = df[(df['heart_rate'] > 100) & ((df['glucose'] < 70) | (df['glucose'] > 180))]
-        fig6 = px.scatter(alerts.sample(min(len(alerts), 500)), x='heart_rate', y='glucose', 
-                          color='glucose', color_continuous_scale='Bluered')
-        st.plotly_chart(style_plot(fig6, m_size=20), use_container_width=True)
-        st.markdown("<p class='custom-caption'>Combined high heart rate and glucose instability markers.</p>", unsafe_allow_html=True)
+    st.header("Prescriptive Analysis")
+
+    st.markdown("""
+    This section provides actionable insights to support better glucose management,
+    early risk detection, and patient-specific intervention strategies.
+    """)
+
+    # ROW 1
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.subheader("Patient Risk Category Distribution")
+
+        st.image(
+            "Charts/Prescriptive/Patient Risk Category Distribution.png",
+            use_container_width=True
+        )
+
+        st.caption("""
+        This chart identifies how many patients fall into High, Moderate,
+        and Low Risk groups.
+
+        Recommendation: High-risk patients should receive closer monitoring
+        and personalized intervention strategies.
+        """)
+
+    with col2:
+        st.subheader("Global Hourly Glucose Pattern")
+
+        st.image(
+            "Charts/Prescriptive/image(20).png",
+            use_container_width=True
+        )
+
+        st.caption("""
+        This chart highlights average glucose trends throughout the day.
+
+        Recommendation: Additional monitoring may be needed during
+        high-risk glucose hours.
+        """)
+
+    st.markdown("---")
+
+    # ROW 2
+    col3, col4 = st.columns(2)
+
+    with col3:
+        st.subheader("Sleep Duration vs Nocturnal Hypoglycemia")
+
+        st.image(
+            "Charts/Prescriptive/image(19).png",
+            use_container_width=True
+        )
+
+        st.caption("""
+        This visualization shows the relationship between sleep duration
+        and nighttime hypoglycemia frequency.
+
+        Recommendation: Improving sleep quality may help reduce
+        overnight glucose instability.
+        """)
+
+    with col4:
+        st.subheader("Calories vs Future Glucose")
+
+        st.image(
+            "Charts/Prescriptive/image(24).png",
+            use_container_width=True
+        )
+
+        st.caption("""
+        This chart evaluates how calorie intake may influence future
+        glucose levels.
+
+        Recommendation: Dietary monitoring can support early prevention
+        of glucose spikes.
+        """)
+
+    st.markdown("---")
+
+    # ROW 3
+    col5, col6 = st.columns(2)
+
+    with col5:
+        st.subheader("Potential Alert Conditions")
+
+        st.image(
+            "Charts/Prescriptive/image(21).png",
+            use_container_width=True
+        )
+
+        st.caption("""
+        This chart identifies possible alert conditions involving
+        abnormal glucose levels and elevated heart rate.
+
+        Recommendation: Real-time alerts may support early intervention.
+        """)
+
+    with col6:
+        st.subheader("Impact of Previous Day Calories on Morning Glucose")
+
+        st.image(
+            "Charts/Prescriptive/Impact of Previous Day Calories on Morning Glucose.png",
+            use_container_width=True
+        )
+
+        st.caption("""
+        This chart shows how calorie intake impacts next-morning glucose.
+
+        Recommendation: Managing evening calorie intake may improve
+        overnight glucose control.
+        """)
+
+
+# =====================================================
+# PREDICTIVE ANALYSIS TAB
+# =====================================================
+
 with tab3:
+
     st.header("Predictive Analysis")
 
     st.markdown("""
@@ -282,30 +468,10 @@ with tab3:
     """)
 
     results = pd.DataFrame({
-        "Model": [
-            "Linear Regression",
-            "XGBoost",
-            "LSTM",
-            "GRU"
-        ],
-        "MAE": [
-            29.22,
-            25.05,
-            0.99,
-            10.77
-        ],
-        "RMSE": [
-            43.81,
-            39.82,
-            1.81,
-            15.52
-        ],
-        "R² Score": [
-            0.418,
-            0.512,
-            0.998,
-            0.859
-        ]
+        "Model": ["Linear Regression", "XGBoost", "LSTM", "GRU"],
+        "MAE": [29.22, 25.05, 0.99, 10.77],
+        "RMSE": [43.81, 39.82, 1.81, 15.52],
+        "R² Score": [0.418, 0.512, 0.998, 0.859]
     })
 
     st.subheader("Model Performance Metrics")
@@ -344,30 +510,32 @@ with tab3:
 
     st.subheader("Actual vs Predicted Glucose")
 
-    linear_img = Image.open("charts/linear_regression.png")
-    xgb_img = Image.open("charts/xgboost.png")
-    lstm_img = Image.open("charts/lstm.png")
-    gru_img = Image.open("charts/gru.png")
+    linear_img = Image.open("charts/Predictive/linear_regression.png")
+    xgb_img = Image.open("charts/Predictive/xgboost.png")
+    lstm_img = Image.open("charts/Predictive/lstm.png")
+    gru_img = Image.open("charts/Predictive/gru.png")
 
     col1, col2 = st.columns(2)
 
     with col1:
         st.markdown("### Linear Regression")
-        st.image(linear_img, use_container_width=True)
+        st.image("Charts/Predictive/linear_regression.png", use_container_width=True)
 
     with col2:
         st.markdown("### XGBoost")
-        st.image(xgb_img, use_container_width=True)
+        st.image("Charts/Predictive/xgboost.png", use_container_width=True)
+
+    st.markdown("---")
 
     col3, col4 = st.columns(2)
 
     with col3:
         st.markdown("### LSTM")
-        st.image(lstm_img, use_container_width=True)
+        st.image("Charts/Predictive/lstm.png", use_container_width=True)
 
     with col4:
         st.markdown("### GRU")
-        st.image(gru_img, use_container_width=True)
+        st.image("Charts/Predictive/gru.png", use_container_width=True)
 
     st.subheader("Key Insights")
 
@@ -376,4 +544,4 @@ with tab3:
     - **XGBoost improved prediction accuracy** by capturing nonlinear relationships.
     - **LSTM achieved the best overall performance**, showing the strength of sequential deep learning.
     - **GRU also performed strongly**, capturing temporal glucose dynamics with lower complexity than LSTM.
-    """)        
+    """)
