@@ -36,59 +36,34 @@ It focuses on analyzing Continuous Glucose Monitoring (CGM) data to detect patte
 - Streamlit
 
 # How to Run the Project
+Follow these steps to run `app.py` locally:
 ## Step 1: Clone the Repository
-
 ```bash
-git clone https://github.com/dev-ssr/team9_PyCoders_PythonHackathon_MAY2026.git
-```
+git clone <repository-url>
+cd <project-folder>
 
----
-
-## Step 2: Navigate to the Project Folder
-
-```bash
-cd team9_PyCoders_PythonHackathon_MAY2026
-```
-
----
+## Step 2: Create a Virtual Environment (Optional but Recommended)
+python -m venv venv
+Activate Virtual Environment
+Windows
+venv\Scripts\activate
+Mac/Linux
+source venv/bin/activate
 
 ## Step 3: Install Required Libraries
-
-```bash
-pip install pandas numpy matplotlib seaborn streamlit
-```
-
----
+pip install pandas numpy matplotlib seaborn streamlit jupyter
 
 ## Step 4: Run Jupyter Notebook (for analysis)
-
-```bash
 jupyter notebook
-```
-
 Open the notebook:
-
-```text
 Team9_PyCoders_Category2.Descriptive analysis.ipynb
-```
-
----
 
 ## Step 5: Run Streamlit Dashboard
+streamlit run app.py
 
-```bash
-python -m streamlit run app.py
-```
-
----
-
-## Step 6: Open Dashboard in Browser
-
+## tep 6: Open Dashboard in Browser
 After running Streamlit, open:
-
-```text
 http://localhost:8501
-```
 
 The dashboard will automatically launch in your browser.
 
