@@ -364,4 +364,184 @@ with tab2:
 
         Recommendation: High-risk patients should receive closer monitoring
         and personalized intervention strategies.
-       ...
+        """)
+
+    with col2:
+        st.subheader("Global Hourly Glucose Pattern")
+
+        st.image(
+            "Charts/Prescriptive/image(20).png",
+            use_container_width=True
+        )
+
+        st.caption("""
+        This chart highlights average glucose trends throughout the day.
+
+        Recommendation: Additional monitoring may be needed during
+        high-risk glucose hours.
+        """)
+
+    st.markdown("---")
+
+    # ROW 2
+    col3, col4 = st.columns(2)
+
+    with col3:
+        st.subheader("Sleep Duration vs Nocturnal Hypoglycemia")
+
+        st.image(
+            "Charts/Prescriptive/image(19).png",
+            use_container_width=True
+        )
+
+        st.caption("""
+        This visualization shows the relationship between sleep duration
+        and nighttime hypoglycemia frequency.
+
+        Recommendation: Improving sleep quality may help reduce
+        overnight glucose instability.
+        """)
+
+    with col4:
+        st.subheader("Calories vs Future Glucose")
+
+        st.image(
+            "Charts/Prescriptive/image(24).png",
+            use_container_width=True
+        )
+
+        st.caption("""
+        This chart evaluates how calorie intake may influence future
+        glucose levels.
+
+        Recommendation: Dietary monitoring can support early prevention
+        of glucose spikes.
+        """)
+
+    st.markdown("---")
+
+    # ROW 3
+    col5, col6 = st.columns(2)
+
+    with col5:
+        st.subheader("Potential Alert Conditions")
+
+        st.image(
+            "Charts/Prescriptive/image(21).png",
+            use_container_width=True
+        )
+
+        st.caption("""
+        This chart identifies possible alert conditions involving
+        abnormal glucose levels and elevated heart rate.
+
+        Recommendation: Real-time alerts may support early intervention.
+        """)
+
+    with col6:
+        st.subheader("Impact of Previous Day Calories on Morning Glucose")
+
+        st.image(
+            "Charts/Prescriptive/Impact of Previous Day Calories on Morning Glucose.png",
+            use_container_width=True
+        )
+
+        st.caption("""
+        This chart shows how calorie intake impacts next-morning glucose.
+
+        Recommendation: Managing evening calorie intake may improve
+        overnight glucose control.
+        """)
+
+
+# =====================================================
+# PREDICTIVE ANALYSIS TAB
+# =====================================================
+
+with tab3:
+
+    st.header("Predictive Analysis")
+
+    st.markdown("""
+    This section compares machine learning and deep learning models
+    for forecasting future glucose values.
+    """)
+
+    results = pd.DataFrame({
+        "Model": ["Linear Regression", "XGBoost", "LSTM", "GRU"],
+        "MAE": [29.22, 25.05, 0.99, 10.77],
+        "RMSE": [43.81, 39.82, 1.81, 15.52],
+        "R² Score": [0.418, 0.512, 0.998, 0.859]
+    })
+
+    st.subheader("Model Performance Metrics")
+    st.dataframe(results, use_container_width=True)
+
+    st.subheader("Performance Comparison")
+
+    col1, col2, col3 = st.columns(3)
+
+    with col1:
+        st.markdown("#### MAE")
+        fig, ax = plt.subplots(figsize=(3, 2.5))
+        ax.bar(results["Model"], results["MAE"])
+        ax.set_ylabel("MAE", fontsize=8)
+        ax.tick_params(axis="x", rotation=45, labelsize=7)
+        ax.tick_params(axis="y", labelsize=7)
+        st.pyplot(fig)
+
+    with col2:
+        st.markdown("#### RMSE")
+        fig, ax = plt.subplots(figsize=(3, 2.5))
+        ax.bar(results["Model"], results["RMSE"])
+        ax.set_ylabel("RMSE", fontsize=8)
+        ax.tick_params(axis="x", rotation=45, labelsize=7)
+        ax.tick_params(axis="y", labelsize=7)
+        st.pyplot(fig)
+
+    with col3:
+        st.markdown("#### R² Score")
+        fig, ax = plt.subplots(figsize=(3, 2.5))
+        ax.bar(results["Model"], results["R² Score"])
+        ax.set_ylabel("R²", fontsize=8)
+        ax.tick_params(axis="x", rotation=45, labelsize=7)
+        ax.tick_params(axis="y", labelsize=7)
+        st.pyplot(fig)
+
+    st.subheader("Actual vs Predicted Glucose")
+
+    linear_img = Image.open("charts/Predictive/linear_regression.png")
+    xgb_img = Image.open("charts/Predictive/xgboost.png")
+    lstm_img = Image.open("charts/Predictive/lstm.png")
+    gru_img = Image.open("charts/Predictive/gru.png")
+
+    col1, col2 = st.columns(2)
+
+    with col1:
+        st.markdown("### Linear Regression")
+        st.image("Charts/Predictive/linear_regression.png", use_container_width=True)
+
+    with col2:
+        st.markdown("### XGBoost")
+        st.image("Charts/Predictive/xgboost.png", use_container_width=True)
+
+    st.markdown("---")
+
+    col3, col4 = st.columns(2)
+
+    with col3:
+        st.markdown("### LSTM")
+        st.image("Charts/Predictive/lstm.png", use_container_width=True)
+
+    with col4:
+        st.markdown("### GRU")
+        st.image("Charts/Predictive/gru.png", use_container_width=True)
+
+    st.subheader("Key Insights")
+
+    st.markdown("""
+    - **Linear Regression showed limited forecasting capability**, suggesting glucose behavior is nonlinear.
+    - **XGBoost improved prediction accuracy** by capturing nonlinear relationships.
+    - **LSTM achieved the best overall performance**, showing the strength of sequential deep learning.
+    - **GRU also performed strongly**, capturing temporal glucose dynamics with lower complexity than LSTM.
+    """)
