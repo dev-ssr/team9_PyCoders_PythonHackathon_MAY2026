@@ -79,7 +79,7 @@ streamlit run Team9_PyCoders_app.py
 
 ---
 
-# Step 5: Open Dashboard in Browser(Recommanded to open in Microsoftedge) 
+# Step 5: Open Dashboard in Browser(Recommanded to open in Microsoftedge other browsers will give zoomed view)
 
 After running Streamlit, open:
 
