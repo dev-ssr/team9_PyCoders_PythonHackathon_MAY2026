@@ -35,9 +35,7 @@ It focuses on analyzing Continuous Glucose Monitoring (CGM) data to detect patte
 - Seaborn
 - Streamlit
 
-## How to Run
-# 🚀 How to Run the Project
-
+# How to Run the Project
 ## Step 1: Clone the Repository
 
 ```bash
