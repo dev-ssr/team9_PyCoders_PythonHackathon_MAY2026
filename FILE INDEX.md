@@ -55,7 +55,7 @@ Dashboard:
 2. Run the Streamlit app:  
    streamlit run app.py
 
-3. The dashboard will open automatically in your browser at:  
+3. The dashboard will open automatically in your browser at: 
    http://localhost:8501
 
 Notes:
