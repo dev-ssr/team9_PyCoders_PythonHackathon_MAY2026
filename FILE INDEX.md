@@ -62,15 +62,6 @@ Notes:
 - The dashboard uses `clean.csv` as the primary dataset.  
 - Ensure `clean.csv` is in the same directory as `app.py` before running.
 
-HELPFUL READING:
 
-1. Python Hackathon - Reference Document  
-   Contains all rules, expectations, and examples needed for the hackathon.
-
-2. Tableau dashboard of examples and rules  
-   All the information on the dashboard is also in the reference document.
-
-3. FAQs - Python Hackathon  
-   More help with Git and the hackathon.
 
 
