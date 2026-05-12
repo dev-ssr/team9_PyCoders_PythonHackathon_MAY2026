@@ -102,7 +102,7 @@ streamlit run app.py
 
 ---
 
-# Step 6: Open Dashboard in Browser(Recommand to open in Microsoftedge) 
+# Step 6: Open Dashboard in Browser(Recommanded to open in Microsoftedge) 
 
 After running Streamlit, open:
 
