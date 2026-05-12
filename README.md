@@ -7,8 +7,8 @@ It focuses on analyzing Continuous Glucose Monitoring (CGM) data to detect patte
 # The project combines:
 
 - Descriptive Data Analysis
-- Risk Pattern Detection
-- Personalized Patient Insights
+- Prescriptive Data Analysis
+- Predictive Data Analysis
 - Data Visualization using Python
 
 # Objective
@@ -23,9 +23,9 @@ It focuses on analyzing Continuous Glucose Monitoring (CGM) data to detect patte
  📁 Project Structure
 - HUPA dataset → raw data source
 - merged_data.csv → processed dataset
-- clean.csv → cleaned dataset
+- Team9_PyCoders_clean.csv → cleaned dataset
 - notebooks → EDA + analysis work
-- app.py → Streamlit dashboard
+- Team9_PyCoders_app.py → Streamlit dashboard
 
  ## Tech Stack
 - Python
@@ -34,12 +34,11 @@ It focuses on analyzing Continuous Glucose Monitoring (CGM) data to detect patte
 - Matplotlib
 - Seaborn
 - Streamlit
-
+- TensorFlow
+- Scikit learn
+  
 # How to Run the Project
-Follow these steps to run `app.py` locally:
-# How to Run the Project
-
-Follow these steps to run the project locally.
+Follow these steps to run `Team9_PyCoders_app.py` locally:
 
 ---
 
@@ -50,29 +49,7 @@ git clone <repository-url>
 cd <team9_PyCoder_PhythonHackthon_MAY2026>
 ```
 
----
-
-# Step 2: Create a Virtual Environment (Optional but Recommended)
-
-```bash
-python -m venv venv
-```
-
-### Activate Virtual Environment
-
-#### Windows
-```bash
-venv\Scripts\activate
-```
-
-#### Mac/Linux
-```bash
-source venv/bin/activate
-```
-
----
-
-# Step 3: Install Required Libraries
+# Step 2: Install Required Libraries
 
 ```bash
 pip install pandas numpy matplotlib seaborn streamlit jupyter
@@ -80,7 +57,7 @@ pip install pandas numpy matplotlib seaborn streamlit jupyter
 
 ---
 
-# Step 4: Run Jupyter Notebook (for Analysis)
+# Step 3: Run Jupyter Notebook (for Analysis)
 
 ```bash
 jupyter notebook
@@ -94,15 +71,15 @@ Team9_PyCoders_app.py
 
 ---
 
-# Step 5: Run Streamlit Dashboard
+# Step 4: Run Streamlit Dashboard
 
 ```bash
-streamlit run app.py
+streamlit run Team9_PyCoders_app.py
 ```
 
 ---
 
-# Step 6: Open Dashboard in Browser(Recommanded to open in Microsoftedge) 
+# Step 5: Open Dashboard in Browser(Recommanded to open in Microsoftedge) 
 
 After running Streamlit, open:
 
