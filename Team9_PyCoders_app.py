@@ -414,12 +414,13 @@ with tab2:
 )
 
 
-        st.caption("""
-        ### This chart identifies how many patients fall into High, Moderate, and Low Risk groups.
-
-
-        ### Recommendation: High-risk patients should receive closer monitoring and personalized intervention strategies.
-        """)
+        
+        st.markdown("""
+        <p class='custom-caption'>
+      This chart identifies how many patients fall into High, Moderate, and Low Risk groups.</p>
+      <p class='custom-caption'>Recommendation: High-risk patients should receive closer monitoring and personalized intervention strategies.</p>
+        
+        """, unsafe_allow_html=True)
 
 
     with col2:
@@ -432,12 +433,13 @@ with tab2:
         )
 
 
-        st.caption("""
-        ### This chart highlights average glucose trends throughout the day.
-
-
-        ### Recommendation: Additional monitoring may be needed during high-risk glucose hours.
-        """)
+       
+        st.markdown("""
+        <p class='custom-caption'>
+      This chart highlights average glucose trends throughout the day. </p>
+        <p class='custom-caption'>Recommendation: Additional monitoring may be needed during high-risk glucose hours.
+        </p>
+        """, unsafe_allow_html=True)
 
 
     st.markdown("---")
@@ -456,13 +458,13 @@ with tab2:
             use_container_width=True
         )
 
-
-        st.caption("""
-        ### This visualization shows the relationship between sleep duration and nighttime hypoglycemia frequency.
-
-
-        ### Recommendation: Improving sleep quality may help reduce overnight glucose instability.
-        """)
+        st.markdown("""
+        <p class='custom-caption'>
+       This visualization shows the relationship between sleep duration and nighttime hypoglycemia frequency. </p>
+        <p class='custom-caption'>Recommendation: Improving sleep quality may help reduce overnight glucose instability.
+        </p>
+        """, unsafe_allow_html=True)
+      
 
 
     with col4:
@@ -475,12 +477,14 @@ with tab2:
         )
 
 
-        st.caption("""
-        ### This chart evaluates how calorie intake may influence future glucose levels.
+       
+        st.markdown("""
+        <p class='custom-caption'>
+        This chart evaluates how calorie intake may influence future glucose levels.</p>
+        <p class='custom-caption'>Recommendation: Dietary monitoring can support early prevention of glucose spikes.
+        </p>
+        """, unsafe_allow_html=True)
 
-
-        ### Recommendation: Dietary monitoring can support early prevention of glucose spikes.
-        """)
 
 
     st.markdown("---")
@@ -500,12 +504,13 @@ with tab2:
         )
 
 
-        st.caption("""
-        ### This chart identifies possible alert conditions involving abnormal glucose levels and elevated heart rate.
-
-
-        ### Recommendation: Real-time alerts may support early intervention.
-        """)
+        
+        st.markdown("""
+        <p class='custom-caption'>
+        This chart identifies possible alert conditions involving abnormal glucose levels and elevated heart rate. </p>
+         <p class='custom-caption'>Recommendation: Real-time alerts may support early intervention.
+        </p>
+        """, unsafe_allow_html=True)
 
 
     with col6:
@@ -518,12 +523,13 @@ with tab2:
         )
 
 
-        st.caption("""
-        ### This chart shows how calorie intake impacts next-morning glucose.
 
-
-        ### Recommendation: Managing evening calorie intake may improve overnight glucose control.
-        """)
+        st.markdown("""
+        <p class='custom-caption'>
+       This chart shows how calorie intake impacts next-morning glucose. </p>
+         <p class='custom-caption'>Recommendation: Managing evening calorie intake may improve overnight glucose control.
+        </p>
+        """, unsafe_allow_html=True)
 
 
 
@@ -540,8 +546,7 @@ with tab3:
 
 
     st.markdown("""
-    This section compares machine learning and deep learning models
-    for forecasting future glucose values.
+    ### This section compares machine learning and deep learning models for forecasting future glucose values.
     """)
 
 
@@ -554,7 +559,45 @@ with tab3:
 
 
     st.subheader("Model Performance Metrics")
-    st.dataframe(results, use_container_width=True)
+    #st.dataframe(results, use_container_width=True)
+    # --- STYLE THE TABLE ---
+    st.markdown("""
+    <style>
+    /* Target the table container */
+    .big-table {
+        font-size: 40px !important; /* Huge font for the data */
+        width: 100%;
+        border-collapse: collapse;
+        margin: 25px 0;
+    }
+    
+    /* Target table headers */
+    .big-table th {
+        background-color: #0B243B !important;
+        color: white !important;
+        font-size: 45px !important;
+        padding: 20px !important;
+        text-align: center !important;
+        border: 3px solid #85929E !important;
+    }
+    
+    /* Target table cells */
+    .big-table td {
+        padding: 15px !important;
+        text-align: center !important;
+        border: 2px solid #D5DBDB !important;
+        color: #17202A !important;
+        font-weight: 600 !important;
+    }
+
+    /* Add zebra striping for readability */
+    .big-table tr:nth-child(even) { background-color: #F8F9F9; }
+    </style>
+    """, unsafe_allow_html=True)
+
+# --- DISPLAY THE DATA ---
+# We use to_html with a custom class 'big-table'
+    st.write(results.to_html(classes='big-table', index=False), unsafe_allow_html=True)
 
 
     st.subheader("Performance Comparison")
@@ -635,9 +678,9 @@ with tab3:
 
 
     st.markdown("""
-    - **Linear Regression showed limited forecasting capability**, suggesting glucose behavior is nonlinear.
-    - **XGBoost improved prediction accuracy** by capturing nonlinear relationships.
-    - **LSTM achieved the best overall performance**, showing the strength of sequential deep learning.
-    - **GRU also performed strongly**, capturing temporal glucose dynamics with lower complexity than LSTM.
+    ### - **Linear Regression showed limited forecasting capability**, suggesting glucose behavior is nonlinear.
+    ### - **XGBoost improved prediction accuracy** by capturing nonlinear relationships.
+    ### - **LSTM achieved the best overall performance**, showing the strength of sequential deep learning.
+    ### - **GRU also performed strongly**, capturing temporal glucose dynamics with lower complexity than LSTM.
     """)
 
